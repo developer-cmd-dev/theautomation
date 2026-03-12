@@ -3,12 +3,22 @@ import { Button } from './ui/button';
 import { Trash2 } from 'lucide-react';
 
 
+type CustomEdgeProps = {
+  id:string,
+  sourceX:number,
+  sourceY:number,
+  targetX:number,
+  targetY:number,
+  sourcePosition:number,
+  targetPosition:number
+  
+}
 
-type CustomEdge = Edge<{ value: number }, 'custom'>
+type CustomEdgeType = Edge<CustomEdgeProps, 'custom'>
 
 
 
-export function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition }: EdgeProps<CustomEdge>) {
+export function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition }: EdgeProps<CustomEdgeType>) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,

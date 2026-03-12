@@ -6,10 +6,11 @@ export type CustomNode = {
     handle_left:string|null,
     handle_right:string|null,
     handleCreate:(nodeType:string)=>void;
-    icon:React.ReactNode
+    icon:React.ReactNode,
+    isConnected:false
 } 
 
 
 export type CustomNodeType = Node<CustomNode,'custom'>;
 
-export type NodeType = 'trigger'|'gemini'|'http'|'code'
+export type NodeType = 'trigger'|'gemini-model'|'http-request'|'code'

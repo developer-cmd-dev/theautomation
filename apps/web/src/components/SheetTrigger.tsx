@@ -20,6 +20,7 @@ interface Props {
 }
 
 export function SheetTriggerComponent({ children, type ,handleClick}: Props) {
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -56,19 +57,26 @@ export function SheetTriggerComponent({ children, type ,handleClick}: Props) {
 
               </div>
             ) : (
-              nodesList.map((element) => (
-                <div key={element.title} className=" gap-5 flex  h-fit items-center p-2 hover:bg-gray-200 rounded-md cursor-pointer">
-                  <div>
-                    {element.icon}
+              nodesList.map((element) => {
+                
+                return (
+                  <div
+                  onClick={()=>{
+                    handleClick(element.type)
+                  }}
+                  key={element.title} className=" gap-5 flex  h-fit items-center p-2 hover:bg-gray-200 rounded-md cursor-pointer">
+                    <div>
+                      {element.icon}
+                    </div>
+  
+                    <div>
+                      <h1 className="font-bold text-gray-500">{element.title}</h1>
+                      <p className="font-light text-gray-400">{element.description}</p>
+                    </div>
+  
                   </div>
-
-                  <div>
-                    <h1 className="font-bold text-gray-500">{element.title}</h1>
-                    <p className="font-light text-gray-400">{element.description}</p>
-                  </div>
-
-                </div>
-              ))
+                )
+              })
             )
           }
         </div>
@@ -82,7 +90,7 @@ export function SheetTriggerComponent({ children, type ,handleClick}: Props) {
 
 const nodesList = [
   {
-    type: 'llm-model',
+    type: 'gemini-model',
     name: 'gemini',
     icon:<Brain className="size-6" />,
     title: 'Gemini',

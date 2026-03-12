@@ -10,8 +10,9 @@ import ScriptNode from './ScriptNode';
 import GoogleDocsNode from './GoogleDocsNode';
 import { CustomEdge } from './CustomEdge';
 import CustomNode from './CustomNode';
-import { Clock } from 'lucide-react';
+import { Braces, Clock, Coins, Globe, HandCoins } from 'lucide-react';
 import type { NodeType } from '@/types/types';
+import { createConnection, createNode } from '@/NodeLogic/logic';
 
 
 const NodeTypes = {
@@ -20,7 +21,7 @@ const NodeTypes = {
     // geminiNode: GeminiNode,
     // scriptNode: ScriptNode,
     // googleDocsNode: GoogleDocsNode
-    customNode:CustomNode
+    customNode: CustomNode
 
 }
 
@@ -117,7 +118,7 @@ export default function Flow() {
 
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-        [],
+        [nodes],
     );
     const onEdgesChange: OnEdgesChange = useCallback(
         (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
@@ -134,25 +135,77 @@ export default function Flow() {
 
     const handleCreate = (nodeType: string) => {
         if (nodeType === 'trigger') {
-            const scheduleNode = {
-                 id: 'n1', 
-                 position: { x: -200, y: 0 }, 
-                 data: { 
-                    label: 'Node 1',
-                    title:'scheduler',
-                    icon:<Clock/>,
-                    handleCreate ,
-                    id:'scheduler-node',
-                    handle_right:'scheduler-node',
-                    handle_left:null
-                }, 
-                 type: 'customNode' 
-                };
-            initialNodes.push(scheduleNode)
-            setNodes((nodeSnapShot) => [...nodeSnapShot, scheduleNode])
-        }else if(nodeType ==='gemini'){
+        
+            const schedulerNode = createNode(nodeType,initialNodes,<Clock/>,handleCreate)
+            
+            initialNodes.push(schedulerNode);
+            setNodes((nodeSnapShot) => {
+                return [...nodeSnapShot]
+            })
+        } else if (nodeType === 'gemini-model') {
+            const icon = <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="url(#paint0_linear)" />
+                         <defs>
+                             <linearGradient id="paint0_linear" x1="0" y1="50" x2="100" y2="50" gradientUnits="userSpaceOnUse">
+                                 <stop stopColor="#4285F4" />
+                                 <stop offset="1" stopColor="#9B72CB" />
+                             </linearGradient>
+                         </defs>
+                    </svg>;
 
 
+            const geminiNode = createNode(nodeType,initialNodes,icon,handleCreate)
+            const getLastNode = initialNodes[initialNodes.length - 1];
+
+
+            initialNodes.push(geminiNode)
+            setNodes((nodeSnapShot) => [...nodeSnapShot, geminiNode])
+            if (getLastNode) {
+              const {connection,lastNodeConnected}=  createConnection(getLastNode,geminiNode,initialNodes);
+              setNodes(lastNodeConnected)
+                setEdges((edgeSnapshot) => {
+                    return [...edgeSnapshot, connection]
+                })
+
+            }
+        }else if(nodeType==='http-request'){
+
+            const httpNode = createNode(nodeType,initialNodes,<Globe/>,handleCreate)
+            const getLastNode = initialNodes[initialNodes.length - 1];
+
+
+            initialNodes.push(httpNode)
+            setNodes((nodeSnapShot) => [...nodeSnapShot, httpNode])
+            if (getLastNode) {
+                const {connection,lastNodeConnected}=  createConnection(getLastNode,httpNode,initialNodes);
+              setNodes(()=>lastNodeConnected)
+
+                setEdges((edgeSnapshot) => {
+                    return [...edgeSnapshot, connection]
+                })
+
+            }
+
+        }else if(nodeType==='code'){
+            const codeNode = createNode(nodeType,initialNodes,<Braces/>,handleCreate)
+            const getLastNode = initialNodes[initialNodes.length - 1];
+
+
+            initialNodes.push(codeNode)
+            setNodes((nodeSnapShot) => [...nodeSnapShot, codeNode])
+            if (getLastNode) {
+              const {connection,lastNodeConnected}=  createConnection(getLastNode,codeNode,initialNodes)
+
+            
+
+              setNodes(()=>lastNodeConnected)
+
+                setEdges((edgeSnapshot) => {
+                    
+                    return [...edgeSnapshot, connection]
+                })
+
+            }
         }
     }
 
