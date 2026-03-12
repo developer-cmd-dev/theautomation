@@ -13,4 +13,4 @@ export type CustomNode = {
 
 export type CustomNodeType = Node<CustomNode,'custom'>;
 
-export type NodeType = 'trigger'|'gemini-model'|'http-request'|'code'
+export type NodeType = 'trigger'|'gemini-model'|'http-request'|'code'|'google-docs'

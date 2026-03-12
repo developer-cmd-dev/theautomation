@@ -1,26 +1,16 @@
 import { useState, useCallback, useEffect } from 'react';
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, MarkerType, Controls, MiniMap, Position, type Node, type Edge, type OnNodesChange, type OnEdgesChange, type OnConnect, type NodeChange } from '@xyflow/react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, MarkerType, Controls, MiniMap, Position, type Node, type Edge, type OnNodesChange, type OnEdgesChange, type OnConnect, type NodeChange, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { cn } from '@/lib/utils';
 import CreateFlow from './CreateFlow';
-import SchedulerNode from './SchedulerNode';
-import GeminiNode from './GeminiNode';
-import HttpNode from './HttpNode';
-import ScriptNode from './ScriptNode';
-import GoogleDocsNode from './GoogleDocsNode';
 import { CustomEdge } from './CustomEdge';
 import CustomNode from './CustomNode';
-import { Braces, Clock, Coins, Globe, HandCoins } from 'lucide-react';
-import type { NodeType } from '@/types/types';
+import { Braces, Clock,  Globe,  } from 'lucide-react';
 import { createConnection, createNode } from '@/NodeLogic/logic';
 
 
 const NodeTypes = {
-    // schdulerNode: SchedulerNode,
-    // httpNode: HttpNode,
-    // geminiNode: GeminiNode,
-    // scriptNode: ScriptNode,
-    // googleDocsNode: GoogleDocsNode
+
     customNode: CustomNode
 
 }
@@ -31,86 +21,9 @@ const EdgeType = {
 
 
 
-// const initialNodes:Node[] = [
-//     { id: 'n1', position: { x: -200, y: 0 }, data: { label: 'Node 1' }, type: 'schdulerNode' },
-//     { id: 'n2', position: { x: -100, y: 0 }, data: { label: 'Node 2' }, type: 'httpNode' },
-//     { id: 'n3', position: { x: 0, y: 0 }, data: { label: 'Node 3' }, type: 'geminiNode' },
-//     { id: 'n4', position: { x: 100, y: 0 }, data: { label: 'Node 4' }, type: 'scriptNode' },
-//     { id: 'n5', position: { x: 200, y: 0 }, data: { label: 'Node 5' }, type: 'scriptNode' },
-//     { id: 'n6', position: { x: 300, y: 0 }, data: { label: 'Node 6' }, type: "googleDocsNode" }
-// ];
-
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = []
 
-
-
-// const initialEdges:Edge[] = [
-//     {
-//         id: 'n1-n2',
-//         source: 'n1',
-//         target: 'n2',
-//         sourceHandle: 'scheduler-node',
-//         targetHandle: 'http-node-left',
-//         type:"customEdge",
-//         markerEnd: {
-//             type: MarkerType.ArrowClosed
-//         },
-
-//     },
-//     {
-//         id: 'n2-n3',
-//         source: 'n2',
-//         target: 'n3',
-//         type:"customEdge",
-
-//         sourceHandle: 'http-node-right',
-//         targetHandle: 'gemini-node-left',
-//         markerEnd: {
-//             type: MarkerType.ArrowClosed
-//         },
-
-//     },
-//     {
-//         id: 'n3-n4',
-//         source: 'n3',
-//         target: 'n4',
-//         type:"customEdge",
-
-//         sourceHandle: 'gemini-node-right',
-//         targetHandle: 'script-node-left',
-//         markerEnd: {
-//             type: MarkerType.ArrowClosed
-//         },
-
-//     },
-//     {
-//         id: 'n4-n5',
-//         source: 'n4',
-//         target: 'n5',
-//         type:"customEdge",
-
-//         sourceHandle: 'script-node-right',
-//         targetHandle: 'script-node-left',
-//         markerEnd: {
-//             type: MarkerType.ArrowClosed
-//         },
-
-//     },
-//     {
-//         id: 'n5-n6',
-//         source: 'n5',
-//         target: 'n6',
-//         type:"customEdge",
-
-//         sourceHandle: 'script-node-right',
-//         targetHandle: 'googleDocs-node-left',
-//         markerEnd: {
-//             type: MarkerType.ArrowClosed
-//         },
-
-//     }
-// ];
 
 export default function Flow() {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
@@ -206,8 +119,34 @@ export default function Flow() {
                 })
 
             }
+        }else if(nodeType==='google-docs'){
+            const icon =  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path><path fill="#bbdefb" d="M40 13L30 13 30 3z"></path><path fill="#1565c0" d="M30 13L40 23 40 13z"></path><path fill="#e3f2fd" d="M15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+        </svg>;
+
+            const googleDocsNode = createNode(nodeType,initialNodes,icon,handleCreate)
+            const getLastNode = initialNodes[initialNodes.length - 1];
+
+            
+
+            initialNodes.push(googleDocsNode)
+            setNodes((nodeSnapShot) => [...nodeSnapShot, googleDocsNode])
+            if (getLastNode) {
+              const {connection,lastNodeConnected}=  createConnection(getLastNode,googleDocsNode,initialNodes)
+
+            
+
+              setNodes(()=>lastNodeConnected)
+
+                setEdges((edgeSnapshot) => {
+                    
+                    return [...edgeSnapshot, connection]
+                })
+
+            }
         }
     }
+
 
 
 
@@ -230,6 +169,7 @@ export default function Flow() {
                 nodes.length === 0 ? <CreateFlow handleCreate={handleCreate} /> :
                     <div className='h-full w-full'>
                         <ReactFlow
+                        className='border border-red'
                             nodes={nodes}
                             edges={edges}
                             onNodesChange={onNodesChange}

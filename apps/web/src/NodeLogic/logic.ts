@@ -12,7 +12,7 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
     if (nodeType === 'trigger') {
         const scheduleNode = {
             id: `n${initialNodes.length+1}`,
-            position: { x: -200, y: 0 },
+            position: { x: -400, y: 0 },
             data: {
                 label: 'Node 1',
                 title: 'scheduler',
@@ -71,6 +71,26 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
         }
 
         return httpNode
+    }else if(nodeType==='google-docs'){
+        const googleDocsNode = {
+            id: `n${initialNodes.length+1}`,
+            position: { x:lastNodeXPosition||0, y: 0 },
+            data: {
+                label: `Node ${initialNodes.length+1}`,
+                title: 'google-docs-node',
+                id: 'google-docs-node',
+                icon:icon,
+                handle_right: 'google-docs-node-right',
+                handle_left: 'google-docs-node-left',
+                handleCreate,
+                isConnected:false
+            },
+            type:'customNode'
+
+
+        }
+
+        return googleDocsNode
     }else{
         const codeNode = {
             id: `n${initialNodes.length+1}`,
@@ -116,6 +136,7 @@ export function createConnection(lastNode:Node,currentNode:Node,initialNodes:Nod
         if(elem.id === lastNode.id){
            elem.data.isConnected=true;
         }
+        elem.position.x -=100;
         return elem
       })
 
