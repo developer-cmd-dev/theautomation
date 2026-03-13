@@ -15,6 +15,8 @@ import { Label } from "./ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
 import { Input } from "./ui/input"
 import useNodeMenuDrawerData from "@/store/nodeMenuDrawer.store"
+import ExecutionResult from "./ExecutionResult"
+import HttpNodeConfig from "./HttpNodeConfig"
 
 export function NodeMenuDrawer() {
   const {data}=useNodeMenuDrawerData((state)=>state)
@@ -27,10 +29,10 @@ export function NodeMenuDrawer() {
 
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}  >
+    <Drawer open={true} onOpenChange={setOpen}  >
 
       <DrawerContent className="h-250" >
-        <div className="mx-auto w-full ">
+        <div className="mx-auto w-full h-full ">
           <DrawerHeader className=" flex flex-row h-fit items-center  justify-between  ">
             {
               data.nodeType==='scheduler' && <DrawerTitle className="flex items-center gap-2 text-xl "><Clock className="size-7" />Schedule Trigger</DrawerTitle>
@@ -49,7 +51,7 @@ export function NodeMenuDrawer() {
             </Button>
           </DrawerHeader>
 
-          <div className="w-full h-full  flex items-center ">
+          {/* <div className="w-full h-full  flex items-center ">
             <div id="menu" className=" h-full  w-[40%] flex flex-col gap-5 p-6 ">
               <div className="input-area  flex flex-col gap-4 ">
                 <Label className="text-gray-500 font-semibold">Trigger Interval</Label>
@@ -112,19 +114,10 @@ export function NodeMenuDrawer() {
               </div>
             </div>
 
-            <div id="execution_result" className="w-full h-full p-4">
-              <div className=" flex  flex-col gap-3">
-              <h1 className="text-gray-500">Output</h1>
-              <Separator/>
-              </div>
+           <ExecutionResult type="Output"/>
+          </div> */}
 
-              <div className="w-full h-full flex flex-col gap-3 items-center justify-center">
-              <Zap className="size-8" />
-              <Button variant={'outline'}>Execute Step</Button>
-              </div>
-            </div>
-          </div>
-
+         <HttpNodeConfig/>
         </div>
       </DrawerContent>
     </Drawer>
