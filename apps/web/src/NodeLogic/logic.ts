@@ -20,6 +20,7 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
                 id: 'scheduler-node',
                 handle_right: 'scheduler-node',
                 handle_left: null,
+                type:"scheduler",
                 handleCreate,
                 isConnected:false
             },
@@ -41,6 +42,7 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
                 icon:icon,
                 handle_right: 'gemini-node-right',
                 handle_left: 'gemini-node-left',
+                type:nodeType,
                 handleCreate,
                 isConnected:false
             },
@@ -62,6 +64,7 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
                 icon:icon,
                 handle_right: 'http-node-right',
                 handle_left: 'http-node-left',
+                type:nodeType,
                 handleCreate,
                 isConnected:false
             },
@@ -82,6 +85,7 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
                 icon:icon,
                 handle_right: 'google-docs-node-right',
                 handle_left: 'google-docs-node-left',
+                type:nodeType,
                 handleCreate,
                 isConnected:false
             },
@@ -103,6 +107,7 @@ export function createNode (nodeType:NodeType,initialNodes:Node[],icon:React.Rea
                 handle_right: 'code-node-right',
                 handle_left: 'code-node-left',
                 handleCreate,
+                type:nodeType,
                 isConnected:false
             },
             type:'customNode'

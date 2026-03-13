@@ -1,0 +1,132 @@
+import { useState, useEffect } from "react"
+import * as React from "react"
+import { Button } from "./ui/button"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "./ui/drawer"
+import { Clock, Globe, X, Zap } from "lucide-react"
+import { Separator } from "./ui/separator"
+import { Label } from "./ui/label"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
+import { Input } from "./ui/input"
+import useNodeMenuDrawerData from "@/store/nodeMenuDrawer.store"
+
+export function NodeMenuDrawer() {
+  const {data}=useNodeMenuDrawerData((state)=>state)
+  const [open, setOpen] = useState(data.isCreated)
+
+
+  useEffect(() => {
+    setOpen(data.isCreated)
+  }, [data])
+
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}  >
+
+      <DrawerContent className="h-250" >
+        <div className="mx-auto w-full ">
+          <DrawerHeader className=" flex flex-row h-fit items-center  justify-between  ">
+            {
+              data.nodeType==='scheduler' && <DrawerTitle className="flex items-center gap-2 text-xl "><Clock className="size-7" />Schedule Trigger</DrawerTitle>
+            }
+             {
+              data.nodeType==='http-request' && <DrawerTitle className="flex items-center gap-2 text-xl "><Globe className="size-7" />HTTP Node</DrawerTitle>
+            }
+
+{
+              data.nodeType==='gemini-model' && <DrawerTitle className="flex items-center gap-2 text-xl "><Globe className="size-7" />Gemini Node</DrawerTitle>
+            }
+            
+            <DrawerDescription></DrawerDescription>
+            <Button onClick={() => setOpen(false)} className="border rounded-2xl">
+              <X />
+            </Button>
+          </DrawerHeader>
+
+          <div className="w-full h-full  flex items-center ">
+            <div id="menu" className=" h-full  w-[40%] flex flex-col gap-5 p-6 ">
+              <div className="input-area  flex flex-col gap-4 ">
+                <Label className="text-gray-500 font-semibold">Trigger Interval</Label>
+                <Select >
+                  <SelectTrigger className="w-full max-w-full">
+                    <SelectValue placeholder="Select Interval" />
+                  </SelectTrigger>
+                  <SelectContent  >
+                    <SelectGroup>
+                      <SelectItem value="ap ple">Minutes</SelectItem>
+                      <SelectItem value="banana">Hours</SelectItem>
+                      <SelectItem value="blueberry">Days</SelectItem>
+                      <SelectItem value="grapes">Weeks</SelectItem>
+                      <SelectItem value="pineapple">Months</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="input-area  flex flex-col gap-4 ">
+                <Label className="text-gray-500 font-semibold">Days Between Triggers</Label>
+                <Input defaultValue={1} type="number" max={31} min={1} />
+              </div>
+
+              <div className="input-area  flex flex-col gap-4 ">
+                <Label className="text-gray-500 font-semibold">Trigger at hours</Label>
+                <Select >
+                  <SelectTrigger className="w-full ">
+                    <SelectValue placeholder="Select Time" />
+                  </SelectTrigger>
+                  <SelectContent  >
+                    <SelectGroup>
+                      {
+                        Array.from({ length: 24 }, (_, i) => i + 1).map((x) => {
+                          if (x >= 13) {
+                          return(
+                            <SelectItem key={x} value={`${x-12}pm`}>
+                            {`${x-12}pm`}
+                          </SelectItem>
+                          )
+                          } else {
+                            return (
+                              <SelectItem key={x} value={`${x}Am`}>
+                                {`${x}Am`}
+                              </SelectItem>
+                            )
+                          }
+                        })
+
+                      }
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="input-area  flex flex-col gap-4 ">
+                <Label className="text-gray-500 font-semibold">Trigger at Minute</Label>
+                <Input defaultValue={0} type="number" max={60} min={0} />
+                
+              </div>
+            </div>
+
+            <div id="execution_result" className="w-full h-full p-4">
+              <div className=" flex  flex-col gap-3">
+              <h1 className="text-gray-500">Output</h1>
+              <Separator/>
+              </div>
+
+              <div className="w-full h-full flex flex-col gap-3 items-center justify-center">
+              <Zap className="size-8" />
+              <Button variant={'outline'}>Execute Step</Button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </DrawerContent>
+    </Drawer>
+  )
+}

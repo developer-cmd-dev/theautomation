@@ -3,6 +3,7 @@ import type { Node } from "@xyflow/react";
 export type CustomNode = {
     id:string,
     title:string,
+    type:string;
     handle_left:string|null,
     handle_right:string|null,
     handleCreate:(nodeType:string)=>void;
