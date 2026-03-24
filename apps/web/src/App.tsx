@@ -2,11 +2,17 @@
 import "./index.css";
 
 import Flow from "./components/FlowDiagram";
+import { BrowserRouter, Route, Routes } from "react-router";
+import Dashboard from "./pages/Dashboard";
 export function App() {
   return (
-  <div className="bg-">
-   <Flow/>
-  </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/workflow" element={<Flow/>}/>
+      </Routes>
+    </BrowserRouter>
+
   );
 }
 

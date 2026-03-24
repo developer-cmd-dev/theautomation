@@ -1,7 +1,7 @@
-import UserModel from '@repo/db/schema';
 import express from 'express';
 import mongoose from 'mongoose';
 import "dotenv/config"
+import router from './src/routes/router.js';
 
 
 const app = express();
@@ -9,23 +9,13 @@ app.use(express.json())
 
 const dbUrl = process.env.MONGODB_URL as string;
 
-app.post('/signup', async(req,res)=>{
-    const body =<{name:string,email:string,password:string}> req.body;
-    console.log(body)
-    try {
-      const result = await  UserModel.create(body);
-      console.log(result);
 
-      res.status(200).json(result)
-    } catch (error) {
-        console.log(error)
-    }
-
-})
+app.use('/api/v1',router)
 
 
 
 mongoose.connect(dbUrl).then(()=>{
+    console.log('db connected')
     app.listen(8080,(error)=>{
         if(error){
             console.log(error);

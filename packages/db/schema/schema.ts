@@ -12,6 +12,15 @@ const UserSchema = new Schema({
 },{timestamps:true});
 
 
-const UserModel = model('User',UserSchema)
+const WorkflowSchema = new Schema({
+    name:{type:String,require:true},
+    connections:{type:Array},
+    nodes:{type:Object}
+},{
+    timestamps:true
+})
 
-export default UserModel;
+
+const UserModel = model('User',UserSchema)
+const WorkflowModel= model("Workflow",WorkflowSchema)
+export {UserModel,WorkflowModel};
