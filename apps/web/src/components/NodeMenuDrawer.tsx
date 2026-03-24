@@ -14,6 +14,7 @@ import HttpNodeConfig from "./HttpNodeConfig"
 import SchedulerNodeConfig from "./SchedulerNodeConfig"
 import GeminiNodeConfig from "./GeminiNodeConfig"
 import ScriptNodeConfig from "./ScriptNodeConfig"
+import { DialogTitle } from "./ui/dialog"
 
 export function NodeMenuDrawer() {
   const { data } = useNodeMenuDrawerData((state) => state)
@@ -26,11 +27,14 @@ export function NodeMenuDrawer() {
 
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}  >
+    <Drawer open={true} onOpenChange={setOpen}  >
 
       <DrawerContent className="h-250" >
         <div className="mx-auto w-full h-full ">
           <DrawerHeader className=" flex flex-row  items-center  h-15   justify-between  ">
+            <DialogTitle>
+              
+            </DialogTitle>
             {
               data.nodeType === 'scheduler' && <DrawerTitle className="flex items-center gap-2 text-xl "><Clock className="size-7" />Schedule Trigger</DrawerTitle>
             }
@@ -57,6 +61,7 @@ export function NodeMenuDrawer() {
           {data.nodeType === 'http-request' && <HttpNodeConfig />}
           {data.nodeType === 'gemini-model' && <GeminiNodeConfig />}
           {data.nodeType === 'code' && <ScriptNodeConfig />}
+          <HttpNodeConfig />
         </div>
       </DrawerContent>
     </Drawer>

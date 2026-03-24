@@ -9,6 +9,7 @@ import { Braces, Clock, Globe, } from 'lucide-react';
 import { createConnection, createNode } from '@/NodeLogic/logic';
 import { NodeMenuDrawer } from './NodeMenuDrawer';
 import useNodeMenuDrawerData from '@/store/nodeMenuDrawer.store';
+import { useWorkflowData } from '@/store/workflow.store';
 
 
 const NodeTypes = {
@@ -31,6 +32,7 @@ export default function Flow() {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const {setNodeDrawerHandleData}=useNodeMenuDrawerData((state)=>state)
+    const {data}=useWorkflowData((state)=>state)
   
 
     const onNodesChange: OnNodesChange = useCallback(
@@ -173,7 +175,9 @@ export default function Flow() {
 
 
 
-
+useEffect(()=>{
+console.log(data)
+},[data])
 
 
 

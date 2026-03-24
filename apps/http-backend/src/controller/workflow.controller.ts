@@ -5,6 +5,20 @@ import { Request, Response } from "express";
 
 let cachedWorkflow = new Map<string,object>()
 
+
+
+export async function getWorkFlows(req:Request,res:Response) {
+
+
+   const response=await WorkflowModel.find().limit(10).exec()
+
+   res.status(200).json({message:"success",data:response})
+
+
+
+}
+
+
 export async function createWorkFlow(req:Request,res:Response) {
     try {
         
@@ -17,7 +31,6 @@ export async function createWorkFlow(req:Request,res:Response) {
         }
 
         const {success}= CreateWorkflowZodSchema.safeParse(body);
-
         if(!success){
         res.status(400).json({ message: "Invalid workflow data" });
         return;
@@ -29,7 +42,7 @@ export async function createWorkFlow(req:Request,res:Response) {
        cachedWorkflow.set(response.id.toString(),response);
 
         res.status(200).json({message:"success",data:response})
-        
+    
 
     } catch (error) {
     res.status(500).json({ message: "An error occurred while creating the workflow", error: (error as Error).message });
@@ -55,12 +68,8 @@ export async function updateWorkFlow(req:Request,res:Response){
         return;
         }
 
-        const workflow = await WorkflowModel.findById(workflowId);
 
-        if(!workflow){
-            res.status(404).json({ message: "Workflow not found" });
-            return;
-        }
+
 
         if(body.nodeType==='trigger'){
 

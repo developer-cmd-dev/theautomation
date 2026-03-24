@@ -4,13 +4,38 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Input } from './ui/input'
 import ExecutionResult from './ExecutionResult'
 import type { IntervalTypes } from '@/types/types'
-
+import {useDebouncedCallback} from 'use-debounce'
+import { api } from '@/lib/axios'
+import { useWorkflowData } from '@/store/workflow.store'
 function SchedulerNodeConfig() {
 
   const [intervalType, setIntervalType] = useState<IntervalTypes>("minutes")
   const [triggersInMinute,setTriggersInMinute]=useState<number>(1);
   
-  
+  const debounce = useDebouncedCallback((newTime)=>setTriggersInMinute(newTime),1000);
+
+  const {data}=useWorkflowData((state)=>state)
+
+  useEffect(()=>{
+
+    (async()=>{
+
+      const response =await api({
+        url:`http://localhost:8080/api/v1/update/?id=${data?._id}`,
+        method:"PATCH",
+        data:{
+          nodeType:"trigger",
+          rule:{
+            time:triggersInMinute
+          }
+        }
+      })
+
+      console.log(response.data)
+    })()
+
+
+  },[triggersInMinute])
 
 
   return (
@@ -38,7 +63,7 @@ function SchedulerNodeConfig() {
           intervalType === 'minutes' && (
             <div className="input-area  flex flex-col gap-4 ">
               <Label className="text-gray-500 font-semibold">Minutes Between Triggers</Label>
-              <Input defaultValue={1} type="number" max={60} min={1} onChange={(e)=>setTriggersInMinute(Number(e.target.value))} />
+              <Input defaultValue={1} type="number" max={60} min={1} onChange={(e)=>debounce  (Number(e.target.value))} />
             </div>
           )
         }

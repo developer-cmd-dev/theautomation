@@ -8,7 +8,7 @@ import * as z from "zod";
 export const CreateWorkflowZodSchema = z.object({
     name: z.string(),
     connections: z.object().array(),
-    nodes: z.object().array()
+    nodes: z.object()
 
 })
 
@@ -67,7 +67,8 @@ export type HttpNodeRuleType = ApiProps
 
 export interface WorkFlowUpdate {
     nodeType: NodeType,
-    rule: object
+    connections:object[];
+    rule: object;
 }
 
 

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useEffect, useState, type ChangeEvent } from "react"
 import { Button } from "./ui/button"
 import {
     Dialog,
@@ -23,7 +23,17 @@ interface Props {
 }
 
 export function NodeOptionDialog({ children, type }: Props) {
-    const [fields, setFields] = useState<number[]>([1])
+    const [fields, setFields] = useState<Record<string, string>[]>([{}])
+    const [key, setKey] = useState('');
+    const [value, setValue] = useState('');
+
+    const onFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.name === 'key') setKey(e.target.value)
+        else setValue(e.target.value)
+    }
+
+
+
     return (
         <Dialog>
             <form>
@@ -40,43 +50,56 @@ export function NodeOptionDialog({ children, type }: Props) {
                     </DialogHeader>
                     <FieldGroup className="gap-2">
                         {
-                            fields.map(id =>{
-                                return  (
-                                    <div key={String(id)} className="flex items-center justify-between gap-4 ">
-                                      <div className="flex flex-col gap-2 w-full" >
-                                      <Field>
-                                            <Label htmlFor="name-1" >Name</Label>
-                                            <Input id="name-1" name="name" className="rounded-none h-6 px-2" />
-                                        </Field>
-                                        <Field>
-                                            <Label htmlFor="value">Value</Label>
-                                            <Input id="username-1" name="value" className="rounded-none h-6 px-2" />
-                                        </Field>
-    
-                                        <Separator className="my-2 "/>
-                                      </div>
-                                      <div className=" w-[15%]">
-                                       {
-                                        id>1 &&  <Button 
-                                        onClick={()=>setFields(()=>fields.filter((x)=>x!=id))}
-                                        variant={'ghost'} className="hover:bg-red-300 cursor-pointer"><Trash className="size-5"/></Button>
-                                       }
-                                      </div>
+                            fields.map((obj) => {
+                                return (
+                                    <div key={fields.indexOf(obj)} className="flex items-center justify-between gap-4 ">
+                                        <div className="flex flex-col gap-2 w-full" >
+                                            <Field>
+                                                <Label htmlFor="key" >Key</Label>
+                                                <Input
+                                                    value={key}
+                                                    id={`key-${fields.length}`}
+                                                    name="key"
+                                                    className="rounded-none h-6 px-2"
+                                                    onChange={onFieldChange}
+                                                />
+                                            </Field>
+                                            <Field>
+                                                <Label htmlFor="value">Value</Label>
+                                                <Input
+                                                    value={value}
+                                                    id={`value-${fields.length}`}
+                                                    name="value"
+                                                    className="rounded-none h-6 px-2"
+                                                    onChange={onFieldChange}
+                                                />
+                                            </Field>
+
+                                            <Separator className="my-2 " />
+                                        </div>
+                                        <div className=" w-[15%]">
+                                            {
+                                                fields.indexOf(obj) > 0 && <Button
+                                                    onClick={() => setFields((prev) => prev.filter((_, index) => index != prev.indexOf(obj)))}
+                                                    variant={'ghost'} className="hover:bg-red-300 cursor-pointer"><Trash className="size-5" /></Button>
+                                            }
+                                        </div>
                                     </div>
                                 )
-                            })  
+                            })
                         }
 
 
                     </FieldGroup>
                     <DialogFooter>
                         <Button
-                         variant={"secondary"}
-                         onClick={()=>{
-                            setFields((prev) => {
-                                return [...prev, (prev[prev.length-1]??0)+1]
-                            })
-                         }}
+                            variant={"secondary"}
+                            onClick={() => {
+
+                                setFields((prev) => {
+                                    return [...prev, {}]
+                                })
+                            }}
                         >
                             Add Fields
                         </Button>
@@ -91,5 +114,3 @@ export function NodeOptionDialog({ children, type }: Props) {
     )
 }
 
-
-const fields = [1]

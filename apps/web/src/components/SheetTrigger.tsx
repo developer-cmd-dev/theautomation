@@ -22,7 +22,7 @@ interface Props {
 export function SheetTriggerComponent({ children, type ,handleClick}: Props) {
 
   return (
-    <Sheet>
+    <Sheet >
       <SheetTrigger asChild>
         {children}
       </SheetTrigger>
