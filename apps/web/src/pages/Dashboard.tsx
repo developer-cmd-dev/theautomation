@@ -3,9 +3,10 @@ import { Input } from '@/components/ui/input'
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
+import useApi from '@/hooks/useApi'
 import { api } from '@/lib/axios'
 import { useWorkflowData } from '@/store/workflow.store'
-import { CreateWorkflowZodSchema } from '@repo/types/types'
+import { CreateWorkflowZodSchema, HttpMethods } from '@repo/types/types'
 import { Axios, AxiosError } from 'axios'
 import { MoveLeft, MoveRight, MoveRightIcon } from 'lucide-react'
 import React, { useEffect, useState, type ChangeEvent } from 'react'
@@ -41,7 +42,7 @@ function Dashboard() {
         setLoading(true)
         const response = await api({
             url: `http://localhost:8080/api/v1/create-workflow`,
-            method: 'POST',
+            method: HttpMethods.POST,
             data: {
                 name: workflowName,
                 connections: [],
@@ -66,28 +67,25 @@ function Dashboard() {
 
 
     useEffect(() => {
-
         (async () => {
 
             setFetchWorkFlowsLoading(true)
-            const response = await api({
+    
+          const {data,axiosError}=await  api({
                 url: 'http://localhost:8080/api/v1/get-workflow',
-                method: 'GET'
+                method: HttpMethods.GET
             })
-
-            if (response instanceof AxiosError) {
-                console.log(response.response?.data.message)
+            if(data){
+                setExistingWorkFlows(data);
+                setFetchWorkFlowsLoading(false)
                 return
             }
-            setExistingWorkFlows(response.data);
-            setFetchWorkFlowsLoading(false)
 
-
+            if(axiosError){
+                toast.error(axiosError);
+                return
+            }
         })()
-
-
-
-
     }, [])
 
 
@@ -97,7 +95,7 @@ function Dashboard() {
     return (
         <div className='h-screen w-full flex flex-col border items-center justify-center'>
             <div className='w-1/2 h-fit   p-2 gap-20 flex flex-col justify-center items-center  '>
-            <h1 className=' text-8xl text-center font-bold'>Create Workflow</h1>
+                <h1 className=' text-8xl text-center font-bold'>Create Workflow</h1>
                 <div className='w-full flex gap-5 items-center '>
                     <Input required className='w-full h-20' placeholder='Enter Workflow name' onChange={(e) => setWorkflowName(e.target.value)} />
                     <Button onClick={handleWorkflowCreate} className='h-[70%] rounded-2xl'>
@@ -124,12 +122,12 @@ function Dashboard() {
                             </ItemContent>
                             <ItemActions>
                                 <Button
-                                onClick={()=>{
-                                    setWorkFlowData(workflows);
-                                    navigate('/workflow')
-                                }}
-                                
-                                variant="outline" size="sm" className='cursor-pointer'>
+                                    onClick={() => {
+                                        setWorkFlowData(workflows);
+                                        navigate('/workflow')
+                                    }}
+
+                                    variant="outline" size="sm" className='cursor-pointer'>
                                     Open
                                 </Button>
                             </ItemActions>

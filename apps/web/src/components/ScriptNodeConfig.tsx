@@ -1,24 +1,38 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import ExecutionResult from './ExecutionResult'
 import { Label } from './ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 import { Separator } from './ui/separator'
-import Editor from '@monaco-editor/react'
+import Editor, { type EditorProps } from '@monaco-editor/react'
 
 
 
 function ScriptNodeConfig() {
+
+    const [code,setCode]=useState('')
+
+    const handleEditorMount = useCallback((editor:any,monaco:any)=>{
+        editor.onKeyDown((e:KeyboardEvent) => {
+            if (e.keyCode === monaco.KeyCode.Space) {
+              e.preventDefault(); // Prevent default behavior
+              editor.trigger('keyboard', 'type', { text: ' ' }); // Insert a space
+            }
+          });
+    },[])   
+
+
+
     return (
-        <div className="w-full h-full     flex items-center ">
+        <div className="w-full h-full flex items-center ">
 
             <ExecutionResult type="Input" />
 
 
-            <div className='w-5xl h-full border rounded-md p-4 flex flex-col gap-5' >
+            <div className='min-w-150 max-w-150 h-full border rounded-md p-4 flex flex-col gap-5' >
                 <div className="input-area  flex flex-col gap-3 ">
                     <Label className="text-gray-500 font-semibold">Language</Label>
-                    <Select >
+                    <Select defaultValue='javascript' >
                         <SelectTrigger className="w-full max-w-full">
                             <SelectValue placeholder="language" />
                         </SelectTrigger>
@@ -38,10 +52,13 @@ function ScriptNodeConfig() {
                     {/* <Textarea placeholder='Enter Prompt' /> */}
                     
                     <Editor 
+                    onMount={handleEditorMount}
                     height={'50vh'}
                     className='rounded-md' 
-                    defaultLanguage='javascript'
+                    language='javascript'
                     theme='vs-light'
+                    onChange={(e)=>setCode(e?.toString()??"")}
+                    value={code}
                     />
                 </div>
 

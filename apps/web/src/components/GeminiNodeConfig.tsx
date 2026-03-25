@@ -10,6 +10,15 @@ import { Textarea } from './ui/textarea'
 import { Switch } from './ui/switch'
 
 function GeminiNodeConfig() {
+
+    
+
+
+
+
+
+
+
     return (
         <div className="w-full h-full     flex items-center ">
 
