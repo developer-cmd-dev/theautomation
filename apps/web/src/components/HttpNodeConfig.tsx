@@ -6,16 +6,41 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { NodeOptionDialog } from './NodeOptionDialog';
 import type { HttpMethods } from '@repo/types/types';
+import type { HttpFields } from '@/types/types';
 
 function HttpNodeConfig() {
 
     const [method,setMethod]=useState<string>('GET');
     const [url,setUrl]=useState<string>('')
+    const [queries,setQueries]=useState<Record<string,string>>({})
+    const [headers,setHeaders]=useState<Record<string,string>>({})
 
 
-    const handleOptions = ()=>{
-        
+    const httpFields = (data:HttpFields[])=>{
+        data.forEach((element:HttpFields)=>{
+            if(element.type==='query'){
+                setQueries(prev=>{
+                    return {
+                        ...prev,
+                        [element.key]:element.value
+                    }
+                })
+            }else if(element.type==='headers'){
+                setHeaders(prev=>{
+                    return{
+                        ...prev,
+                        [element.key]:element.value
+                    }
+                })
+            }
+        })
     }
+
+
+    useEffect(()=>{
+        console.log(queries)
+        console.log(headers)
+    },[queries,headers])
 
 
     return (
@@ -53,7 +78,7 @@ function HttpNodeConfig() {
                         return (
                             <div key={element.type} className="input-area  flex flex-col gap-3  ">
                                 <Label className="text-gray-500 font-semibold">{element.title}</Label>
-                                <NodeOptionDialog type={element.type}>
+                                <NodeOptionDialog submitFields={httpFields} type={element.type}>
                                     <Button variant={"outline"}>
                                         Add
                                     </Button>

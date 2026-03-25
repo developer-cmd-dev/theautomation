@@ -18,5 +18,14 @@ export type CustomNodeType = Node<CustomNode, 'custom'>;
 export type IntervalTypes = "minutes" | "hours" | "days" | "weeks" | "months"
 
 
+export interface HttpFields{
+
+    type:string;
+    key:string,
+    value:string
+
+
+}
+
 
 
