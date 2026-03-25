@@ -40,27 +40,18 @@ export const HttpRequestPayloadZodSchema = z.object({
 });
 
 
+
+
+
+
+
+
+export const GeminiPayloadZodSchema = z.object({
+    resources:z.string()
+})
+
+
 export type HttpRequestPayload = z.infer<typeof HttpRequestPayloadZodSchema>
-
-
-export interface ApiProps {
-    url: string;
-    method:HttpMethods
-    data?: any;
-    params?: Record<string, any>;
-    headers?: Record<string, string>;
-    timeout?: number;
-    responseType?: 'json' | 'arraybuffer' | 'blob' | 'document' | 'text' | 'stream';
-    withCredentials?: boolean;
-    auth?: {
-        username: string;
-        password: string;
-    };
-    baseURL?: string;
-    onUploadProgress?: (progressEvent: any) => void;
-    onDownloadProgress?: (progressEvent: any) => void;
-    cancelToken?: any;
-}
 
 
 
@@ -70,30 +61,29 @@ export interface ApiProps {
 export type NodeType = 'trigger' | 'gemini-model' | 'http-request' | 'code' | 'google-docs'
 
 
-export type TriggerInMinute = {
-    time: number
-}
+export const TriggerInMinuteZodSchema = z.object({
+    timeInMinutes:z.number().default(1)
+})
+
+export type TriggerInMinute = z.infer<typeof TriggerInMinuteZodSchema>
 
 
-// export type HttpMethods =
-//     'GET' |
-//     'POST' |
-//     'PUT' |
-//     'PATCH' |
-//     'DELETE' |
-//     'HEAD' |
-//     'OPTIONS' |
-//     'CONNECT' |
-//     'TRACE';
-
-export type HttpNodeRuleType = ApiProps
 
 export interface WorkFlowUpdate {
     nodeType: NodeType,
     connections:object[];
-    rule: object;
+    nodeConfig: object;
 }
 
+
+export const CredentialZodSchema= z.object({
+    workflowId:z.string(),
+    name:z.string(),
+    type:z.string(),
+    data:z.object()
+})
+
+export type CredentialsType = z.infer<typeof CredentialZodSchema> 
 
 
 

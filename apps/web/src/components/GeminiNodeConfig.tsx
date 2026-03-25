@@ -11,6 +11,7 @@ import { Switch } from './ui/switch'
 
 function GeminiNodeConfig() {
 
+
     
 
 
@@ -82,17 +83,23 @@ function GeminiNodeConfig() {
                 <div className="input-area  flex flex-col gap-3 ">
                     <Label className="text-gray-500 font-semibold">Messages</Label>
                     <Separator />
-                    <Textarea placeholder='Enter Prompt'/>
+                    <Textarea placeholder='Enter Prompt' />
                 </div>
 
                 <div className="input-area  flex flex-col gap-3 ">
                     <Label className="text-gray-500 font-semibold">Simplify Output</Label>
-                    <Switch defaultChecked={true}/>
+                    <Switch defaultChecked={true} />
                 </div>
 
                 <div className="input-area  flex flex-col gap-3 ">
                     <Label className="text-gray-500 font-semibold">JSON Output</Label>
-                    <Switch/>
+                    <Switch />
+                </div>
+
+                <div className="input-area  flex flex-col gap-3 ">
+                        <Label htmlFor="picture">File</Label>
+                        <Input id="picture" type="file" accept='.png,.jpeg,.pdf,.jpeg' />
+ 
                 </div>
 
 

@@ -1,128 +1,158 @@
 import { WorkflowModel } from "@repo/db/schema";
-import { CreateWorkflowSchema, CreateWorkflowZodSchema, HttpNodeRuleType, NodeType, TriggerInMinute, WorkFlowUpdate } from "@repo/types/types";
+import { CreateWorkflowSchema, CreateWorkflowZodSchema, HttpRequestPayloadZodSchema, NodeType, TriggerInMinuteZodSchema, WorkFlowUpdate } from "@repo/types/types";
 import { Request, Response } from "express";
+import HttpResponse from "../lib/httpResponse.js";
 
 
-let cachedWorkflow = new Map<string,object>()
+let cachedWorkflow = new Map<string, object>()
 
 
 
-export async function getWorkFlows(req:Request,res:Response) {
+export async function getWorkFlows(req: Request, res: Response) {
 
 
-   const response=await WorkflowModel.find().limit(10).exec()
+    const response = await WorkflowModel.find().limit(10).exec()
 
-   res.status(200).json({message:"success",data:response})
+    res.status(200).json(new HttpResponse(true, 'success', response))
 
 
 
 }
 
 
-export async function createWorkFlow(req:Request,res:Response) {
+export async function createWorkFlow(req: Request, res: Response) {
     try {
-        
-        const body= req.body ;
+
+        const body = req.body;
 
 
-        if(!body){
-            res.status(204).json({message:"Empty field"});
+        if (!body) {
+            res.status(204).json(new HttpResponse(false, "Empty field"));
             return
         }
 
-        const {success}= CreateWorkflowZodSchema.safeParse(body);
-        if(!success){
-        res.status(400).json({ message: "Invalid workflow data" });
-        return;
+        const { success } = CreateWorkflowZodSchema.safeParse(body);
+        if (!success) {
+            res.status(400).json(new HttpResponse(false, "Invalid workflow data"));
+            return;
         }
 
 
-       const response =  await WorkflowModel.create(body);
+        const response = await WorkflowModel.create(body);
 
-       cachedWorkflow.set(response.id.toString(),response);
+        cachedWorkflow.set(response.id.toString(), response);
 
-        res.status(200).json({message:"success",data:response})
-    
+        res.status(200).json(new HttpResponse(true, "success", response))
+
 
     } catch (error) {
-    res.status(500).json({ message: "An error occurred while creating the workflow", error: (error as Error).message });
+        res.status(500).json(new HttpResponse(false, 'Something went wrong'));
     }
 }
 
 
 
-export async function updateWorkFlow(req:Request,res:Response){
+export async function updateWorkFlow(req: Request, res: Response) {
 
 
     try {
         const workflowId = req.query.id as string;
         const body = <WorkFlowUpdate>req.body;
 
-        if(!workflowId){
-        res.status(400).json({ message: "Workflow ID is required" });
-        return;
+        if (!workflowId) {
+            res.status(400).json(new HttpResponse(false, "Workflow ID is required"));
+            return;
         }
 
-        if(!body || !body.nodeType){
-        res.status(400).json({ message: "Invalid or missing nodeType in body" });
-        return;
+        if (!body || !body.nodeType) {
+            res.status(400).json(new HttpResponse(false, "Invalid or missing nodeType in body"));
+            return;
         }
 
 
 
 
-        if(body.nodeType==='trigger'){
+        if (body.nodeType === 'trigger') {
 
-            const rule:TriggerInMinute = body.rule as TriggerInMinute
+            const { success, data } = TriggerInMinuteZodSchema.safeParse(body.nodeConfig);
 
-            const response = await workflowinsertion(workflowId,body.nodeType,{time:rule.time*60000})
-            if(!response){
-                res.status(404).json({message:'Workflow not found'});
+            if (!success) {
+                res.status(422).json(new HttpResponse(false, "Invalid input"))
+                return
             }
-           res.status(200).json(response);
-           return;
 
-        }else if(body.nodeType==='http-request'){
-            const rule:HttpNodeRuleType= body.rule as HttpNodeRuleType
-            const response = await workflowinsertion(workflowId,body.nodeType,rule)
-            if(!response){
-                res.status(404).json({message:'Workflow not found'});
+
+            const response = await workflowinsertion(workflowId, body.nodeType, { time: data?.timeInMinutes * 60000 })
+            if (!response) {
+                res.status(404).json(new HttpResponse(false, 'Workflow not found'));
             }
             res.status(200).json(response);
             return;
+
+        } else if (body.nodeType === 'http-request') {
+            const { success, data } = HttpRequestPayloadZodSchema.safeParse(body.nodeConfig);
+
+            if (!success) {
+                res.status(422).json(new HttpResponse(false, "Invalid input"))
+                return
+            }
+
+
+            const response = await workflowinsertion(workflowId, body.nodeType, data)
+            if (!response) {
+                res.status(404).json(new HttpResponse(false, 'Workflow not found'));
+            }
+            res.status(200).json(response);
+            return;
+        } else if (body.nodeType === 'code') {
+
+            const scriptData = body.nodeConfig;
+            if (!scriptData) {
+                res.status(422).json(new HttpResponse(false, "Invalid Input"))
+                return
+            }
+
+            const response = await workflowinsertion(workflowId, body.nodeType, scriptData)
+            res.status(200).json(new HttpResponse(true, "success", response))
+
+
+        }else if(body.nodeType==='gemini-model'){
+            
+
+            
         }
 
 
         res.status(200).json("ok")
     } catch (error) {
-        
+
     }
 
-    
+
 
 
 
 }
 
 
-async function workflowinsertion (id:string,nodeType:NodeType,data:object):Promise<CreateWorkflowSchema|null>{
+async function workflowinsertion(id: string, nodeType: NodeType, data: object): Promise<CreateWorkflowSchema | null> {
 
 
-    const getWorkflow = await WorkflowModel.findById({_id:id})
+    const getWorkflow = await WorkflowModel.findById({ _id: id })
 
-    if(getWorkflow){
+    if (getWorkflow) {
 
-        getWorkflow.nodes={
+        getWorkflow.nodes = {
             ...getWorkflow.nodes,
-            [nodeType]:data
+            [nodeType]: data
         }
 
 
-       await WorkflowModel.updateOne(
-            {_id:id},
+        await WorkflowModel.updateOne(
+            { _id: id },
             {
-                $set:{
-                    nodes:getWorkflow.nodes
+                $set: {
+                    nodes: getWorkflow.nodes
                 }
             }
         )
@@ -130,9 +160,9 @@ async function workflowinsertion (id:string,nodeType:NodeType,data:object):Promi
         return getWorkflow as CreateWorkflowSchema
 
 
-    }else{
+    } else {
         return null;
     }
 
-    
+
 }

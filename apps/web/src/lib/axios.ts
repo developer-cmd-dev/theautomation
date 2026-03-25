@@ -26,12 +26,11 @@ export async function api(apiPayload:HttpRequestPayload ):Promise<{data:any,axio
            if(error.response?.data){
            axiosError=error.response.data.message
            }else{
-            console.log(error.message)
+            axiosError=error.message
            }
 
         }
 
-        console.log(error,'from zod')
     }
 
     return {data,axiosError}

@@ -14,7 +14,6 @@ import { redirect, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 function Dashboard() {
 
-    const backendUrl = "";
 
     const [workflowName, setWorkflowName] = useState<string | null>(null);
     const { setWorkFlowData, setExistingWorkFlows, existingWorkFlows } = useWorkflowData((state) => state)
@@ -29,18 +28,18 @@ function Dashboard() {
 
     const handleWorkflowCreate = async () => {
 
-        const data = CreateWorkflowZodSchema.safeParse({
+        const {success} = CreateWorkflowZodSchema.safeParse({
             name: workflowName,
             connections: [],
             nodes: {}
         })
 
-        if (!data.success) {
+        if (!success) {
             toast.error("Invalid Input")
             return
         }
         setLoading(true)
-        const response = await api({
+        const {data,axiosError} = await api({
             url: `http://localhost:8080/api/v1/create-workflow`,
             method: HttpMethods.POST,
             data: {
@@ -50,15 +49,17 @@ function Dashboard() {
             }
         })
 
-        if (response instanceof AxiosError) {
-            console.log(response.message)
+        if(data){
             setLoading(false)
-        } else {
-            setLoading(false)
-            toast.success("Workflow created")
-            setExistingWorkFlows(response.data);
-            setWorkFlowData(response.data);
-            navigate('/workflow');
+            toast.success('Workflow created');
+            navigate('/workflow')
+            return;
+        }
+
+        if(axiosError){
+            setLoading(false);
+            toast.error("Something went wrong")
+
         }
 
     }
@@ -83,6 +84,7 @@ function Dashboard() {
 
             if(axiosError){
                 toast.error(axiosError);
+                setFetchWorkFlowsLoading(false)
                 return
             }
         })()

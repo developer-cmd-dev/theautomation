@@ -26,7 +26,7 @@ export function NodeMenuDrawer() {
 
 
   return (
-    <Drawer open={true} onOpenChange={setOpen}  >
+    <Drawer open={open} onOpenChange={setOpen}  >
 
       <DrawerContent className="h-250" >
         <div className="mx-auto w-full h-full ">
@@ -58,7 +58,6 @@ export function NodeMenuDrawer() {
           {data.nodeType === 'http-request' && <HttpNodeConfig />}
           {data.nodeType === 'gemini-model' && <GeminiNodeConfig />}
           {data.nodeType === 'code' && <ScriptNodeConfig />}
-          <GeminiNodeConfig />
         </div>
       </DrawerContent>
     </Drawer>

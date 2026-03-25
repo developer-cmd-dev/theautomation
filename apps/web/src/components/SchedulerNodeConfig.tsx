@@ -7,6 +7,7 @@ import type { IntervalTypes } from '@/types/types'
 import {useDebouncedCallback} from 'use-debounce'
 import { api } from '@/lib/axios'
 import { useWorkflowData } from '@/store/workflow.store'
+import { HttpMethods } from '@repo/types/types'
 function SchedulerNodeConfig() {
 
   const [intervalType, setIntervalType] = useState<IntervalTypes>("minutes")
@@ -20,9 +21,10 @@ function SchedulerNodeConfig() {
 
     (async()=>{
 
+    if(data){
       const response =await api({
         url:`http://localhost:8080/api/v1/update/?id=${data?._id}`,
-        method:"PATCH",
+        method:HttpMethods.PATCH,
         data:{
           nodeType:"trigger",
           rule:{
@@ -30,8 +32,10 @@ function SchedulerNodeConfig() {
           }
         }
       })
-
       console.log(response.data)
+
+    }
+
     })()
 
 
