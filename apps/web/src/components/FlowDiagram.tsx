@@ -175,9 +175,7 @@ export default function Flow() {
 
 
 
-useEffect(()=>{
-console.log(data)
-},[data])
+
 
 
 
