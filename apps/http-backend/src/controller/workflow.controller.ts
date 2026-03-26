@@ -1,4 +1,4 @@
-import { WorkflowModel } from "@repo/db/schema";
+import { UserModel, WorkflowModel, mongoose } from "@repo/db/schema";
 import { CreateWorkflowSchema, CreateWorkflowZodSchema, HttpRequestPayloadZodSchema, NodeType, TriggerInMinuteZodSchema, WorkFlowUpdate } from "@repo/types/types";
 import { Request, Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
@@ -37,14 +37,18 @@ export async function createWorkFlow(req: Request, res: Response) {
             return;
         }
 
+        const session = await mongoose.startSession()
+        await session.withTransaction(async () => {
+            const response = await WorkflowModel.create(body);
+            await UserModel.updateOne(
+                { _id: req.user.id },
+                { $set: { workflows: response._id } }
+            )
+            cachedWorkflow.set(response.id.toString(), response);
+            res.status(200).json(new HttpResponse(true, "success", response))
+        })
 
-        const response = await WorkflowModel.create(body);
-
-        cachedWorkflow.set(response.id.toString(), response);
-
-        res.status(200).json(new HttpResponse(true, "success", response))
-
-
+        session.endSession();
     } catch (error) {
         res.status(500).json(new HttpResponse(false, 'Something went wrong'));
     }
@@ -116,10 +120,10 @@ export async function updateWorkFlow(req: Request, res: Response) {
             res.status(200).json(new HttpResponse(true, "success", response))
 
 
-        }else if(body.nodeType==='gemini-model'){
+        } else if (body.nodeType === 'gemini-model') {
 
 
-            
+
         }
 
 
@@ -137,6 +141,7 @@ export async function updateWorkFlow(req: Request, res: Response) {
 
 async function workflowinsertion(id: string, nodeType: NodeType, data: object): Promise<CreateWorkflowSchema | null> {
 
+    
 
     const getWorkflow = await WorkflowModel.findById({ _id: id })
 

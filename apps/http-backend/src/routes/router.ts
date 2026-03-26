@@ -16,12 +16,12 @@ router.get('/hello',authMiddleware, (req, res: Response) => {
 router.post("/signup",signup)
 router.get("/signin",singin)
 
-router.get("/get-workflow", getWorkFlows)
-router.post("/create-workflow", createWorkFlow)
-router.patch("/update", updateWorkFlow)
-
-router.route("/credential").delete(createCredential).post(deleteCredential)
-router.get("/test-credential",testCredential)
+router.get("/get-workflow",authMiddleware, getWorkFlows)
+router.post("/create-workflow",authMiddleware, createWorkFlow)
+router.patch("/update",authMiddleware, updateWorkFlow)
+router.post("/credential",authMiddleware,createCredential)
+router.delete("/credential",authMiddleware,deleteCredential)
+router.get("/test-credential",authMiddleware,testCredential)
 
 
 

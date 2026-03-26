@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
 import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import { testCredential } from "../controller/credential.controller.js";
 
 const tokenSecret = Bun.env.TOKEN_SECRET_KEY as string;
 
@@ -12,9 +13,6 @@ interface JwtPayload{
 }
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
-
-
-
     try {
 
         const getToken = req.headers["authorization"];
@@ -40,9 +38,6 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
        }
     }
-
-
-
 
 
 }

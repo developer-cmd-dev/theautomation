@@ -37,7 +37,7 @@ const CredentialSchema = new Schema({
 const GeminiCredentialSchema = new Schema({
     accountName:{type:String,require:true},
     isActive:{type:Boolean,default:false},
-    isExpired:{type:Boolean,defautl:false},
+    isExpired:{type:Boolean,default:false},
     models:[{type:Schema.Types.Mixed}],
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"User"}
 },{timestamps:true})
@@ -46,5 +46,5 @@ const GeminiCredentialSchema = new Schema({
 const UserModel = model('User', UserSchema)
 const WorkflowModel = model("Workflow", WorkflowSchema)
 const CredentialsModel = model("Credentials", CredentialSchema);
-const GeminiCredential = model("GeminiCredential",GeminiCredentialSchema);
-export { UserModel, WorkflowModel, CredentialsModel,model};
+const GeminiCredentialModel = model("GeminiCredential",GeminiCredentialSchema);
+export { UserModel, WorkflowModel, CredentialsModel,mongoose,GeminiCredentialModel};
