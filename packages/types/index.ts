@@ -41,14 +41,13 @@ export const HttpRequestPayloadZodSchema = z.object({
 });
 
 
-
-
-
-
-
-
 export const GeminiPayloadZodSchema = z.object({
-    resources:z.string()
+    resources:z.string(),
+    operation:z.string(),
+    model:z.string(),
+    message:z.string(),
+    simplifyOutput:z.boolean().default(false),
+    jsonOutput:z.boolean().default(false)
 })
 
 
