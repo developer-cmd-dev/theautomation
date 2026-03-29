@@ -1,5 +1,5 @@
 import { UserModel, WorkflowModel, mongoose } from "@repo/db/schema";
-import { CreateWorkflowSchema, CreateWorkflowZodSchema, HttpRequestPayloadZodSchema, NodeType, TriggerInMinuteZodSchema, WorkFlowUpdate } from "@repo/types/types";
+import { CreateWorkflowSchema, CreateWorkflowZodSchema, GeminiPayloadZodSchema, HttpRequestPayloadZodSchema, NodeType, TriggerInMinuteZodSchema, WorkFlowUpdate } from "@repo/types/types";
 import { Request, Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
 
@@ -90,7 +90,7 @@ export async function updateWorkFlow(req: Request, res: Response) {
             if (!response) {
                 res.status(404).json(new HttpResponse(false, 'Workflow not found'));
             }
-            res.status(200).json(response);
+            res.status(200).json(new HttpResponse(true, "Success", response));
             return;
 
         } else if (body.nodeType === 'http-request') {
@@ -122,15 +122,22 @@ export async function updateWorkFlow(req: Request, res: Response) {
 
         } else if (body.nodeType === 'gemini-model') {
 
-            
+            const { success, data } = GeminiPayloadZodSchema.safeParse(body.nodeConfig);
+            if (!success) {
+                res.status(400).json(new HttpResponse(false, "Invalid Input"));
+                return
+            }
 
-
+            const response = await workflowinsertion(workflowId, body.nodeType, data)
+            if (!response) {
+                res.status(404).json(new HttpResponse(false, 'Workflow not found'));
+            }
+            res.status(200).json(new HttpResponse(true, "Success", response));
+            return;
         }
-
-
-        res.status(200).json("ok")
     } catch (error) {
-
+        console.log(error),
+            res.status(500).json(new HttpResponse(false, "Something went wrong"))
     }
 
 
@@ -142,10 +149,9 @@ export async function updateWorkFlow(req: Request, res: Response) {
 
 async function workflowinsertion(id: string, nodeType: NodeType, data: object): Promise<CreateWorkflowSchema | null> {
 
-    
+
 
     const getWorkflow = await WorkflowModel.findById({ _id: id })
-
     if (getWorkflow) {
 
         getWorkflow.nodes = {

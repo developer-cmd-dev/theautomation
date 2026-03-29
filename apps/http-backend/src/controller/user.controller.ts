@@ -1,7 +1,7 @@
 import { UserSignInZodSchema, UserSignUpZodSchema } from "@repo/types/types";
-import { Request, Response } from "express";
+import { type Request,type Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
-import { model, UserModel } from "@repo/db/schema";
+import {  UserModel } from "@repo/db/schema";
 import jwt from 'jsonwebtoken'
 import "dotenv"
 import { password } from "bun";

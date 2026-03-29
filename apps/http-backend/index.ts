@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import "dotenv/config"
 import router from './src/routes/router.js';
 import cors from 'cors'
+// import  './src/config/cloudinaryconfig.js';
 
 const app = express();
 app.use(express.json())

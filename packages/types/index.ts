@@ -4,7 +4,8 @@ import * as z from "zod";
 export const CreateWorkflowZodSchema = z.object({
     name: z.string(),
     connections: z.object().array(),
-    nodes: z.object()
+    nodes: z.object(),
+    isActive:z.boolean().default(false)
 
 })
 
@@ -47,8 +48,11 @@ export const GeminiPayloadZodSchema = z.object({
     model:z.string(),
     message:z.string(),
     simplifyOutput:z.boolean().default(false),
-    jsonOutput:z.boolean().default(false)
+    jsonOutput:z.boolean().default(false),
+    fileUrl:z.string().optional()
 })
+
+export type GeminiPayload = z.infer<typeof GeminiPayloadZodSchema>
 
 
 export type HttpRequestPayload = z.infer<typeof HttpRequestPayloadZodSchema>
@@ -80,7 +84,8 @@ export const CredentialZodSchema= z.object({
     workflowId:z.string(),
     name:z.string(),
     type:z.string(),
-    data:z.object()
+    data:z.object(),
+    apiKey:z.string().optional()
 })
 
 
@@ -107,9 +112,6 @@ export const UserSignUpZodSchema = z.object({
     name:z.string(),
     email: z.string().email(),
     password: z.string()
-        // .min(8, { message: "Password must be exactly 8 characters" })
-        // .max(8, { message: "Password must be exactly 8 characters" })
-        // .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$/, { message: "Password must be 8 characters, include letters and numbers" })
 })
 
 

@@ -2,7 +2,7 @@
 import "./index.css";
 
 import Flow from "./components/FlowDiagram";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Dashboard from "./pages/Dashboard";
 import { Toaster } from "sonner";
 export function App() {

@@ -9,5 +9,6 @@ export default class HttpResponse {
         this.message = message;
         this.data = data;
     }
+    
 
 }

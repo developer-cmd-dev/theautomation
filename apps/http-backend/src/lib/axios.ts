@@ -8,8 +8,6 @@ export async function api(data: HttpRequestPayload) {
         return response.data;
 
     } catch (error) {
-        if(error instanceof AxiosError){
-            return error.response?.data;
-        }
+       throw error
     }
 }
