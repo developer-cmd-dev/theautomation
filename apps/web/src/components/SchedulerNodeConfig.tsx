@@ -27,7 +27,7 @@ function SchedulerNodeConfig() {
         method:HttpMethods.PATCH,
         data:{
           nodeType:"trigger",
-          rule:{
+          nodeConfig:{
             time:triggersInMinute
           }
         }

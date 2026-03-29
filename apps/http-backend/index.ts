@@ -24,6 +24,8 @@ mongoose.connect(dbUrl).then(()=>{
         }
         console.log('Server is listening on 8080')
     })
+
+    
 }).catch((error)=>{
     console.log(error)
 })

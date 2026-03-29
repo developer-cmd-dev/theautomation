@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@repo/db": "*",
+    "@repo/executors":"*",
     "@repo/types": "*",
     "@repo/typescript-config": "*",
     "@types/cors": "^2.8.19",

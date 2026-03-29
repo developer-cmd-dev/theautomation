@@ -1,0 +1,19 @@
+{
+  "name": "@repo/executors",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./index.ts": "./index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5",
+    "@repo/types": "*"
+  },
+  "dependencies": {
+    "axios": "^1.14.0"
+  }
+}

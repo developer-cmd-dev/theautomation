@@ -77,6 +77,7 @@ export interface WorkFlowUpdate {
     nodeType: NodeType,
     connections:object[];
     nodeConfig: object;
+    isActive:boolean;
 }
 
 
