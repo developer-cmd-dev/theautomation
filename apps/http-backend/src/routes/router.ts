@@ -8,10 +8,17 @@ import { cloudinaryUpload } from "../lib/cloudinary.js";
 import HttpResponse from "../lib/httpResponse.js";
 import { uploadFile } from "../controller/files.controller.js";
 import { test } from "../controller/test.controller.js";
+import { UserModel } from "@repo/db/client";
+import mongoose from 'mongoose'
 
 const router: Router = Router();
 
 router.get('/hello', async(req, res: Response) => {
+    if(UserModel.db === mongoose.connection){
+      console.log(true)
+    }else{
+      console.log(false)
+    }
   res.status(200).json("Ok")
 })
 

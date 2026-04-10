@@ -1,7 +1,7 @@
 import { UserSignInZodSchema, UserSignUpZodSchema } from "@repo/types/types";
 import { type Request,type Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
-import {  UserModel } from "@repo/db/schema";
+import {  UserModel } from "@repo/db/client";
 import jwt from 'jsonwebtoken'
 import "dotenv"
 import { password } from "bun";
@@ -86,6 +86,7 @@ export async function singin(req:Request,res:Response) {
 
 
     } catch (error) {
+        console.log(error)
         res.status(500).json(new HttpResponse(false,"Something went wrong"))
         return;
     }

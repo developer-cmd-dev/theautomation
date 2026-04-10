@@ -1,7 +1,8 @@
-import { UserModel, WorkflowModel, mongoose } from "@repo/db/schema";
+import { UserModel, WorkflowModel } from "@repo/db/client";
 import { CreateWorkflowSchema, CreateWorkflowZodSchema, GeminiPayloadZodSchema, HttpRequestPayloadZodSchema, NodeType, TriggerInMinuteZodSchema, WorkFlowUpdate } from "@repo/types/types";
 import { Request, Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
+import mongoose from 'mongoose'
 
 
 let cachedWorkflow = new Map<string, object>()

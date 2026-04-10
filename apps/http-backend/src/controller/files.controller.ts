@@ -1,7 +1,7 @@
 import { type Request, type Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
 import { cloudinaryUpload } from "../lib/cloudinary.js";
-import { FileUploadModel } from "@repo/db/schema";
+import { FileUploadModel } from "@repo/db/client";
 
 export async function uploadFile(req: Request, res: Response) {
     try {

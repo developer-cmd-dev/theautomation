@@ -1,7 +1,7 @@
 import { CreateWorkflowZodSchema, HttpRequestPayload, NodeType, WorkFlowUpdate } from "@repo/types/types";
 import { type Request, type Response } from "express";
 import HttpResponse from "../lib/httpResponse";
-import { WorkflowModel } from "@repo/db/schema";
+import { WorkflowModel } from "@repo/db/client";
 import { httpNode } from "@repo/executors/index.ts";
 
 export async function test(req: Request, res: Response) {

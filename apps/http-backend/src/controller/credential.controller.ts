@@ -1,8 +1,9 @@
 import { CreateWorkflowZodSchema, CredentialZodSchema, HttpMethods, TestCredentialZodSchema } from "@repo/types/types";
 import { type Response, type Request } from "express";
 import HttpResponse from "../lib/httpResponse.js";
-import { CredentialsModel, GeminiCredentialModel, mongoose, WorkflowModel } from "@repo/db/schema";
+import { CredentialsModel, GeminiCredentialModel, WorkflowModel } from "@repo/db/client";
 import { api } from "../lib/axios.js";
+import mongoose from 'mongoose'
 
 
 
