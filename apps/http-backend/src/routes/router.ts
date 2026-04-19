@@ -13,14 +13,6 @@ import mongoose from 'mongoose'
 
 const router: Router = Router();
 
-router.get('/hello', async(req, res: Response) => {
-    if(UserModel.db === mongoose.connection){
-      console.log(true)
-    }else{
-      console.log(false)
-    }
-  res.status(200).json("Ok")
-})
 
 
 router.post("/signup",signup)
