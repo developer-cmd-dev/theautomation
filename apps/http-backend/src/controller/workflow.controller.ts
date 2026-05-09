@@ -9,7 +9,7 @@ let cachedWorkflow = new Map<string, object>()
 
 
 
-export async function getWorkFlows(req: Request, res: Response) {
+export async function getAllWorkflows(req: Request, res: Response) {
 
 
     const response = await WorkflowModel.find().limit(10).exec()
@@ -71,7 +71,7 @@ export async function updateWorkFlow(req: Request, res: Response) {
             return;
         }
 
-        const getWorkflow = await WorkflowModel.findOne({ _id: workflowId });
+        let getWorkflow = await WorkflowModel.updateOne({_id:workflowId},updateNodeData);
 
         if (!getWorkflow) {
             res.status(404).json(new HttpResponse(false, "Workflow not found"))
@@ -79,14 +79,7 @@ export async function updateWorkFlow(req: Request, res: Response) {
         }
 
 
-        const nodes = updateNodeData.nodes;
-
-        
-
-
-        // getWorkflow.save()
-
-        res.status(200).json(new HttpResponse(true, getWorkflow.nodes));
+        res.status(200).json(new HttpResponse(true, "Workflow Updated"));
 
     } catch (error) {
         console.log(error),
@@ -99,9 +92,3 @@ export async function updateWorkFlow(req: Request, res: Response) {
 
 }
 
-async function workflowinsertion(workflow: any, data: WorkFlowUpdate) {
-    workflow.nodes = {
-        ...workflow.nodes,
-        [data.nodeType]: data.nodeConfig
-    }
-}

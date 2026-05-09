@@ -56,9 +56,11 @@ export type HttpRequestPayload = z.infer<typeof HttpRequestPayloadZodSchema>
 
 
 
-export type NodeType = 'trigger' | 'gemini-model' | 'http-request' | 'code' | 'google-docs'
+
+const NodeTypeSchema = z.enum(['trigger' , 'gemini-model' , 'http-request' , 'code' , 'google-docs'])
 
 
+export type NodeType = z.infer<typeof NodeTypeSchema>
 
 // workflow configuration datatype
 
@@ -71,7 +73,12 @@ export type TriggerInMinute = z.infer<typeof TriggerInMinuteZodSchema>
 export const CreateWorkflowZodSchema = z.object({
     name: z.string(),
     connections: z.object().array(),
-    nodes: z.object().array(),
+    nodes:z.array(
+        z.object({
+            nodeType:NodeTypeSchema,
+            nodeConfig:z.object({}),
+        })
+    ),
     isActive:z.boolean().default(false)
 
 })

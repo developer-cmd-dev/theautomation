@@ -1,5 +1,5 @@
 import { type Response, Router } from "express";
-import { createWorkFlow, getWorkFlows, updateWorkFlow } from "../controller/workflow.controller.js";
+import { createWorkFlow, getAllWorkflows,  updateWorkFlow } from "../controller/workflow.controller.js";
 import { createCredential, deleteCredential, testCredential } from "../controller/credential.controller.js";
 import { signup, singin } from "../controller/user.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
@@ -18,7 +18,7 @@ const router: Router = Router();
 router.post("/signup",signup)
 router.get("/signin",singin)
 
-router.get("/get-workflow",authMiddleware, getWorkFlows)
+router.get("/get-workflow",authMiddleware, getAllWorkflows)
 router.post("/create-workflow",authMiddleware, createWorkFlow)
 router.patch("/update",authMiddleware, updateWorkFlow)
 router.post("/credential",authMiddleware,createCredential)
