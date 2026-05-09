@@ -12,7 +12,7 @@ const UserSchema = new Schema({
     password: { type: String, require: true },
     email: { type: String, require: true,unique:true },
     workflows:[{type:mongoose.Schema.Types.ObjectId,ref:"Workflow"}],
-    openRouterCredential:{type:mongoose.Schema.Types.ObjectId,ref:"Credentials"}
+    openRouterCredential:{type:mongoose.Schema.Types.ObjectId,ref:"Create"}
 }, { timestamps: true });
 
 
@@ -29,12 +29,11 @@ const WorkflowSchema = new Schema({
 
 
 const CredentialSchema = new Schema({
-    name: { type: String, require: true },
+    name: { type: String, require: true,unique:true },
     type: { type: String, require: true },
     data: { type: Schema.Types.Mixed },
     apiKey:{type:String},
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
-    workflowId: { type: mongoose.Schema.Types.ObjectId, ref: "Workflow" }
 }, { timestamps: true })
 
 

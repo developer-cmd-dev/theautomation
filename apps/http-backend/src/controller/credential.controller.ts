@@ -25,7 +25,10 @@ export async function createCredential(req: Request, res: Response) {
                 res.status(404).json(new HttpResponse(false, "Workflow not found"))
             }
 
-            const credentialResponse = await CredentialsModel.create(data)
+            const credentialResponse = await CredentialsModel.create({
+                ...data,
+                userId:req.user.id
+            })
 
             findWorkflow?.credentials.push(credentialResponse._id);
             findWorkflow?.save();
