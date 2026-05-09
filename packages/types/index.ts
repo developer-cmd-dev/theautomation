@@ -1,14 +1,8 @@
 import { password } from "bun";
 import * as z from "zod";
 
-export const CreateWorkflowZodSchema = z.object({
-    name: z.string(),
-    connections: z.object().array(),
-    nodes: z.object(),
-    isActive:z.boolean().default(false)
 
-})
-
+// nodes data type
 export enum HttpMethods {
     GET = "GET",
     POST = "POST",
@@ -65,13 +59,29 @@ export type HttpRequestPayload = z.infer<typeof HttpRequestPayloadZodSchema>
 export type NodeType = 'trigger' | 'gemini-model' | 'http-request' | 'code' | 'google-docs'
 
 
+
+// workflow configuration datatype
+
 export const TriggerInMinuteZodSchema = z.object({
     timeInMinutes:z.number().default(1)
 })
 
 export type TriggerInMinute = z.infer<typeof TriggerInMinuteZodSchema>
 
+export const CreateWorkflowZodSchema = z.object({
+    name: z.string(),
+    connections: z.object().array(),
+    nodes: z.object().array(),
+    isActive:z.boolean().default(false)
 
+})
+
+export type WorkflowSchema = z.infer<typeof CreateWorkflowZodSchema> 
+
+export interface NodeSchema {
+    nodeType:NodeType;
+    nodeConfig:Object;
+}
 
 export interface WorkFlowUpdate {
     nodeType: NodeType,

@@ -1,5 +1,5 @@
 import { UserModel, WorkflowModel } from "@repo/db/client";
-import { CreateWorkflowSchema, CreateWorkflowZodSchema, GeminiPayloadZodSchema, HttpRequestPayloadZodSchema, NodeType, TriggerInMinuteZodSchema, WorkFlowUpdate } from "@repo/types/types";
+import { CreateWorkflowSchema, CreateWorkflowZodSchema, GeminiPayloadZodSchema, HttpRequestPayloadZodSchema, NodeSchema, NodeType, TriggerInMinuteZodSchema, WorkflowSchema, WorkFlowUpdate } from "@repo/types/types";
 import { Request, Response } from "express";
 import HttpResponse from "../lib/httpResponse.js";
 import mongoose from 'mongoose'
@@ -62,7 +62,9 @@ export async function updateWorkFlow(req: Request, res: Response) {
 
     try {
         const workflowId = req.query.id as string;
-        const nodeConfigData = <WorkFlowUpdate[]>req.body;
+        // const nodeConfigData = <WorkFlowUpdate[]>req.body;
+        const updateNodeData = <WorkflowSchema>req.body;
+
 
         if (!workflowId) {
             res.status(400).json(new HttpResponse(false, "Workflow ID is required"));
@@ -77,31 +79,12 @@ export async function updateWorkFlow(req: Request, res: Response) {
         }
 
 
-        nodeConfigData.forEach((data) => {
+        const nodes = updateNodeData.nodes;
 
-            switch (data.nodeType) {
-                case "trigger":
-                    workflowinsertion(getWorkflow, data)
-                    break;
-                case "http-request":
-                    workflowinsertion(getWorkflow, data)
-                    break;
-                case "code":
-                    workflowinsertion(getWorkflow, data)
-                    break;
-                case "gemini-model":
-                    workflowinsertion(getWorkflow, data)
-                    break;
-
-                case "google-docs":
-                    workflowinsertion(getWorkflow,data)
-                    break;
-            }
-
-        })
+        
 
 
-        getWorkflow.save()
+        // getWorkflow.save()
 
         res.status(200).json(new HttpResponse(true, getWorkflow.nodes));
 
