@@ -57,7 +57,7 @@ export type HttpRequestPayload = z.infer<typeof HttpRequestPayloadZodSchema>
 
 
 
-const NodeTypeSchema = z.enum(['trigger' , 'gemini-model' , 'http-request' , 'code' , 'google-docs'])
+const NodeTypeSchema = z.enum(['trigger' , 'openRouter' , 'http-request' , 'code' , 'google-docs'])
 
 
 export type NodeType = z.infer<typeof NodeTypeSchema>

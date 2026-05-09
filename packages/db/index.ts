@@ -12,7 +12,7 @@ const UserSchema = new Schema({
     password: { type: String, require: true },
     email: { type: String, require: true,unique:true },
     workflows:[{type:mongoose.Schema.Types.ObjectId,ref:"Workflow"}],
-    geminiCredential:{type:mongoose.Schema.Types.ObjectId,ref:"GeminiCredential"}
+    openRouterCredential:{type:mongoose.Schema.Types.ObjectId,ref:"Credentials"}
 }, { timestamps: true });
 
 
@@ -33,18 +33,14 @@ const CredentialSchema = new Schema({
     type: { type: String, require: true },
     data: { type: Schema.Types.Mixed },
     apiKey:{type:String},
+    userId:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
     workflowId: { type: mongoose.Schema.Types.ObjectId, ref: "Workflow" }
 }, { timestamps: true })
 
 
-const GeminiCredentialSchema = new Schema({
-    accountName:{type:String,require:true},
+const OpenRouterCredential = new Schema({
     apiKey:{type:String,require:true},
-    isActive:{type:Boolean,default:false},
-    isExpired:{type:Boolean,default:false},
-    models:[{type:Schema.Types.Mixed}],
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
-    credentialId:{type:mongoose.Schema.Types.ObjectId,ref:"Credentials"}
 },{timestamps:true})
 
 
@@ -58,6 +54,6 @@ const FileUploadSchema = new Schema({
 const UserModel = model('User', UserSchema)
 const WorkflowModel = model("Workflow", WorkflowSchema)
 const CredentialsModel = model("Credentials", CredentialSchema);
-const GeminiCredentialModel = model("GeminiCredential",GeminiCredentialSchema);
+const GeminiCredentialModel = model("GeminiCredential",OpenRouterCredential);
 const FileUploadModel = model("FileUpload",FileUploadSchema)
 export { UserModel, WorkflowModel, CredentialsModel,GeminiCredentialModel,FileUploadModel};

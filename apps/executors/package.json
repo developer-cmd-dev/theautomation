@@ -18,6 +18,7 @@
   "dependencies": {
     "@repo/db": "*",
     "@repo/types": "*",
+    "@repo/executors": "*",
     "@repo/typescript-config": "*",
     "@types/mongoose": "^5.11.97",
     "bullmq": "^5.76.6",

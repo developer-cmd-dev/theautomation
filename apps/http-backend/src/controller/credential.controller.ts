@@ -12,7 +12,6 @@ export async function createCredential(req: Request, res: Response) {
     try {
 
         const { success, data } = CredentialZodSchema.safeParse(req.body);
-        console.log(success)
         if (!success) {
             res.status(404).json(new HttpResponse(false, "Invalid input"))
             return;
@@ -31,7 +30,7 @@ export async function createCredential(req: Request, res: Response) {
             findWorkflow?.credentials.push(credentialResponse._id);
             findWorkflow?.save();
 
-            res.status(200).json(new HttpResponse(true, "success", credentialResponse))
+            res.status(200).json(new HttpResponse(true, "success", null))
         })
 
 

@@ -6,23 +6,23 @@ import { Queue } from 'bullmq'
 import workerJob from "./src/worker.js";
 const dbUrl = process.env.MONGODB_URL ?? "";
 
-const queue = new Queue('n8n',{
-  connection:{
-    host:"localhost",
-    port:6379
+const queue = new Queue('n8n', {
+  connection: {
+    host: "localhost",
+    port: 6379
   }
 })
 
 async function main() {
   await dbConnection()
-    workerJob()
-    
+  workerJob()
+
 
   try {
     const allWorkflow = await WorkflowModel.find({ isActive: true })
-   for (const data of allWorkflow) {
+    for (const data of allWorkflow) {
       const FUTURE_TIME = data.nodes[0].nodeConfig.executeInMinute;
-       await queue.add(
+      await queue.add(
         "execute-workflow",
         {
           nodes: data.nodes
