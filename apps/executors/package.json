@@ -16,10 +16,13 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@repo/db": "*",
+    "@repo/types": "*",
+    "@repo/typescript-config": "*",
     "@types/mongoose": "^5.11.97",
-    "@repo/typescript-config":"*",
+    "bullmq": "^5.76.6",
     "dotenv": "^17.4.1",
-    "mongoose": "^9.4.1",
-    "@repo/db":"*"
+    "ioredis": "^5.10.1",
+    "mongoose": "^9.4.1"
   }
 }
