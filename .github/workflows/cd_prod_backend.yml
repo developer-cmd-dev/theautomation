@@ -4,7 +4,7 @@ name: CD_DOCKER_IMAGE (backend) (production)
 
 on:
   push:
-   branches: [production]
+   branches: [main]
 
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
       uses: docker/build-push-action@v7
       with:
           build-args: |
-            DATABASE_URL=${{ secrets.MONGOURL_URL }}
+            DATABASE_URL=${{ secrets.MONGODB_URL }}
           context: .
           file: ./docker/Dockerfile.backend
           push: true
