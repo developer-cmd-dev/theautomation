@@ -1,0 +1,17 @@
+FROM oven/bun:latest
+
+WORKDIR /usr/app/src
+ARG MONGO_URL
+COPY ./packages ./packages
+COPY ./bun.lock ./bun.lock
+COPY ./package.json ./package.json
+COPY ./apps/executors ./apps/executors
+COPY ./turbo.json ./turbo.json
+
+
+RUN bun install
+
+ENV MONGO_URL=${MONGO_URL}
+
+
+CMD [ "bun","run","start:executors" ]
