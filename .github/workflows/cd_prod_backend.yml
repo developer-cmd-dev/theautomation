@@ -24,3 +24,25 @@ jobs:
           file: ./docker/Dockerfile.backend
           push: true
           tags: devkmandal0/excallidraw_backend:${{ github.sha }}
+
+
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            docker pull devkmandal0/excallidraw_backend:${{ github.sha }}
+
+            docker stop excallidraw_backend || true
+            docker rm excallidraw_backend || true
+
+            docker run -d \
+              --name excallidraw_backend \
+              -p 8080:8080 \
+              --restart unless-stopped \
+              devkmandal0/excallidraw_backend:${{ github.sha }}
+
+            docker image prune -af
