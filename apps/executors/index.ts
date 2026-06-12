@@ -6,6 +6,8 @@ import { Queue } from 'bullmq'
 import workerJob from "./src/worker.js";
 const dbUrl = process.env.MONGODB_URL ?? "";
 
+console.log(dbUrl)
+
 const queue = new Queue('n8n', {
   connection: {
     host: "localhost",
@@ -52,7 +54,7 @@ main()
 
 
 async function dbConnection() {
-  mongoose.connect(dbUrl).then(state => {
+  mongoose.connect("mongodb://localhost:27017/").then(state => {
     if (state.connection.readyState === 1) {
 
       console.log("Mongodb connected");

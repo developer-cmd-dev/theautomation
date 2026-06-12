@@ -1,4 +1,4 @@
-import { httpNode, openRouterExecutor } from "@repo/executors/index.ts";
+import { httpNode } from "@repo/executors/index.ts";
 import { NodeSchema } from "@repo/types/types";
 import { Worker } from "bullmq";
 
@@ -11,13 +11,13 @@ async function workerJob() {
            const nodes = <NodeSchema[]> job.data.nodes;
             if(!nodes||nodes.length==0)return;
 
-            for(const data of nodes){
-                if(data.nodeType==='openRouter'){
-                    openRouterExecutor()
-                }else if(data.nodeType==='http-request'){
-                    httpNode()
-                }
-            }
+            // for(const data of nodes){
+            //     if(data.nodeType==='openRouter'){
+            //         openRouterExecutor()
+            //     }else if(data.nodeType==='http-request'){
+            //         httpNode()
+            //     }
+            // }
         },
         {
             connection:{
